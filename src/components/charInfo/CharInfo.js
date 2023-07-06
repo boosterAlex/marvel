@@ -8,10 +8,8 @@ import Skeleton from '../skeleton/Skeleton';
 import './charInfo.scss';
 const CharInfo = ({ charId }) => {
     const [char, setChar] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
 
-    const marvelService = useMarvelServices();
+    const { loading, error, getCharacter, clearError } = useMarvelServices();
 
     useEffect(() => updateChar(), [charId]);
 
@@ -19,22 +17,8 @@ const CharInfo = ({ charId }) => {
         if (!charId) {
             return;
         }
-        onCharLoading();
-        marvelService.getCharacter(charId).then(onCharLoaded).catch(onError);
-    };
-
-    const onCharLoading = () => {
-        setLoading(true);
-    };
-
-    const onCharLoaded = (char) => {
-        setChar(char);
-        setLoading(false);
-    };
-
-    const onError = () => {
-        setLoading(false);
-        setError(true);
+        clearError();
+        getCharacter(charId).then((char) => setChar(char));
     };
 
     const skeleton = char || loading || error ? null : <Skeleton />;

@@ -8,45 +8,28 @@ import './charList.scss';
 
 const CharList = ({ onCharSelected }) => {
     const [charList, setCharList] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
     const [newCharLoading, setNewCharLoading] = useState(false);
     const [offset, setOffset] = useState(210);
     const [charEnded, setCharEnded] = useState(false);
 
-    useEffect(() => onCharAdd, []);
+    useEffect(() => onCharLoaded(offset, true), []);
 
-    const marvelService = useMarvelServices();
+    const { loading, error, getAllCharacters } = useMarvelServices();
 
-    const onCharAdd = (offset) => {
-        onCharLoading();
-        marvelService
-            .getAllCharacters(offset)
-            .then(onCharLoaded)
-            .catch(onError);
+    const onCharLoaded = (offset, initial) => {
+        initial ? setNewCharLoading(false) : setNewCharLoading(false);
+        getAllCharacters(offset).then(onCharAdd);
     };
 
-    const onCharLoading = () => {
-        setNewCharLoading(true);
-    };
-
-    const onCharLoaded = (newChar) => {
+    const onCharAdd = (newChar) => {
         let ended = false;
         if (newChar.length < 9) {
             ended = true;
         }
-        setCharList(() => {
-            return [...charList, ...newChar];
-        });
-        setLoading(false);
+        setCharList(() => [...charList, ...newChar]);
         setNewCharLoading(false);
         setOffset((offset) => offset + 9);
         setCharEnded((charEnded) => ended);
-    };
-
-    const onError = () => {
-        setLoading(() => false);
-        setError(() => true);
     };
 
     const itemRefs = useRef([]);
@@ -93,19 +76,18 @@ const CharList = ({ onCharSelected }) => {
     const items = character(charList);
 
     const errorMessage = error ? <ErrorMessage /> : null;
-    const spinner = loading ? <Spinner /> : null;
-    const content = !(loading || error) ? items : null;
+    const spinner = loading && !newCharLoading ? <Spinner /> : null;
 
     return (
         <div className='char__list'>
             {errorMessage}
             {spinner}
-            {content}
+            {items}
             <button
                 className='button button__main button__long'
                 disabled={newCharLoading}
                 style={{ display: charEnded ? 'none' : 'block' }}
-                onClick={() => onCharAdd(offset)}
+                onClick={() => onCharLoaded(offset)}
             >
                 <div className='inner'>load more</div>
             </button>
