@@ -34,6 +34,8 @@ const CharList = ({ onCharSelected }) => {
 
     const itemRefs = useRef([]);
 
+    console.log('dddddd');
+
     const focusOnItem = (id) => {
         itemRefs.current.forEach((ref) => {
             ref.classList.remove('char__item_selected');
