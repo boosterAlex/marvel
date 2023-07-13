@@ -4,27 +4,47 @@ import useMarvelServices from '../../services/MarvelService';
 import Spinner from '../spinner/spinner';
 import ErrorMessage from '../errorMesage/ErrorMessage';
 import Skeleton from '../skeleton/Skeleton';
+import { Link } from 'react-router-dom';
 
 import './charInfo.scss';
 const CharInfo = ({ charId }) => {
     const [char, setChar] = useState(null);
+    const [comics, setComics] = useState(null);
 
-    const { loading, error, getCharacter, clearError } = useMarvelServices();
+    const {
+        loading,
+        error,
+        getCharacter,
+        clearError,
+        getComicsListForCharacter,
+    } = useMarvelServices();
 
     useEffect(() => updateChar(), [charId]);
+    useEffect(() => updateComics(), [charId]);
 
     const updateChar = () => {
         if (!charId) {
             return;
         }
         clearError();
-        getCharacter(charId).then((char) => setChar(char));
+        getCharacter(charId).then((char) => {
+            setChar(char);
+        });
     };
 
-    const skeleton = char || loading || error ? null : <Skeleton />;
+    const updateComics = () => {
+        if (!charId) {
+            return;
+        }
+        getComicsListForCharacter(charId).then((comics) => setComics(comics));
+    };
+
+    const skeleton = comics || char || loading || error ? null : <Skeleton />;
     const errorMessage = error ? <ErrorMessage /> : null;
     const spinner = loading ? <Spinner /> : null;
-    const content = !(loading || error || !char) ? <View char={char} /> : null;
+    const content = !(loading || error || !char || !comics) ? (
+        <View char={char} comics={comics} />
+    ) : null;
 
     return (
         <div className='char__info'>
@@ -36,8 +56,8 @@ const CharInfo = ({ charId }) => {
     );
 };
 
-const View = ({ char }) => {
-    const { name, description, thumbnail, homepage, wiki, comics } = char;
+const View = ({ char, comics }) => {
+    const { name, description, thumbnail, homepage, wiki } = char;
 
     const styleNotFound =
         thumbnail ===
@@ -55,9 +75,11 @@ const View = ({ char }) => {
             if (i < 1) {
             }
             return (
-                <li className='char__comics-item' key={i}>
-                    {item.name}
-                </li>
+                <Link to={`/comics/${item.id}`}>
+                    <li className='char__comics-item' key={item.id}>
+                        {item.title}
+                    </li>
+                </Link>
             );
         });
     };
