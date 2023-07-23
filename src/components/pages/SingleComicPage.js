@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Spinner from '../spinner/spinner';
 import ErrorMessage from '../errorMesage/ErrorMessage';
-import Skeleton from '../skeleton/Skeleton';
-
+import AppBanner from '../appBanner/AppBanner';
 import useMarvelServices from '../../services/MarvelService';
 import './singleComicPage.scss';
 
@@ -31,6 +30,7 @@ const SingleComicPage = () => {
 
     return (
         <>
+            <AppBanner />
             {errorMessage}
             {spinner}
             {content}

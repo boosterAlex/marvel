@@ -3,6 +3,8 @@ import { useState } from 'react';
 import CharList from '../charList/CharList';
 import CharInfo from '../charInfo/CharInfo';
 import RandomChar from '../randomChar/RandomChar';
+import CharSearchForm from '../charSearchForm/CharSearchForm';
+import AppBanner from '../appBanner/AppBanner';
 
 import decoration from '../../resources/img/vision.png';
 
@@ -17,7 +19,10 @@ const MainPage = () => {
             <RandomChar />
             <div className='char__content'>
                 <CharList onCharSelected={onCharSelected} />
-                <CharInfo charId={selectedChar} />
+                <div>
+                    <CharInfo charId={selectedChar} />
+                    <CharSearchForm />
+                </div>
             </div>
             <img className='bg-decoration' src={decoration} alt='vision' />
         </>

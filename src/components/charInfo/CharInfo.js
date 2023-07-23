@@ -14,7 +14,7 @@ const CharInfo = ({ charId }) => {
     const {
         loading,
         error,
-        getCharacter,
+        getCharacterById,
         clearError,
         getComicsListForCharacter,
     } = useMarvelServices();
@@ -27,7 +27,7 @@ const CharInfo = ({ charId }) => {
             return;
         }
         clearError();
-        getCharacter(charId).then((char) => {
+        getCharacterById(charId).then((char) => {
             setChar(char);
         });
     };
