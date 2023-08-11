@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import Spinner from '../spinner/spinner';
 import ErrorMessage from '../errorMesage/ErrorMessage';
 import AppBanner from '../appBanner/AppBanner';
@@ -30,6 +31,13 @@ const SingleComicPage = () => {
 
     return (
         <>
+            <Helmet>
+                <meta
+                    name='description'
+                    content={`${singleComic.title} comics book`}
+                />
+                <title>{singleComic.title}</title>
+            </Helmet>
             <AppBanner />
             {errorMessage}
             {spinner}

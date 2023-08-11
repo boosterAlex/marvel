@@ -68,7 +68,6 @@ const Comics = () => {
     };
     const items = comicsList(comics);
 
-    console.log(comics);
     const errorMessage = error ? <ErrorMessage /> : null;
     const spinner = loading && !newItemLoading ? <Spinner /> : null;
 
